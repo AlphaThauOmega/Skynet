@@ -2,6 +2,9 @@ package skynet;
 
 import static org.springframework.http.HttpStatus.*;
 import grails.transaction.Transactional;
+import java.text.SimpleDateFormat;
+import grails.converters.JSON;
+
 
 public class UsuarioController {
 
@@ -15,6 +18,11 @@ public class UsuarioController {
                                 params.contrasena == null) {
             return;
 	}
+        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        Date fecha = new Date();
+        String codigo = (format.format(fecha) + usuario.nombre).encodeAsSHA1Hex();
+        params.codigo = codigo;
+        params.validado = false;
         Usuario usuario = new Usuario(params);
         if(!usuario.save()) {
             render view: '/error', model: [status:500, exception:usuario.errors];
@@ -33,6 +41,40 @@ public class UsuarioController {
                 return;
             }
             render '{"exist":false}';
+            return;
+	}
+        render '{"error":"nombre de usuario nulo"}'
+    }
+
+    public Object enviar() { 
+        response.setContentType("application/json");
+        if (params && params.nombreUsuario && params.correo) {
+            Usuario usuario = Usuario.findByNombreUsuarioAndCorreo(params.nombreUsuario, params.correo);
+            SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+            Date fecha = new Date();
+            String codigo = (format.format(fecha) + usuario.nombre).encodeAsSHA1Hex();
+            usuario.setCodigo(codigo);
+            usuario.save(flush:true);
+            String url = "Skynet" + "/usuario/recuperar/${usuario.id}?codigo=${codigo}";
+            if(usuario) {
+                try {
+                    sendMail {
+                            async true;
+                            to usuario.correo;
+                            subject 'Reinicio contraseña'
+                            html """<p>Da click en el sigiente link para restablecer tu contrasena</p>\n\
+                                <a href="${url}">Recuperar contraseña</a>
+                                <p style=\"font-size:6pt;\"> Si usted esta leyendo las letra pequeñas tiene buena vista</p>
+				<p style=\"font-size:6pt;\"> Skynet es una marca registrada, lease los terminos y condicines de uso</p>"""
+                    }
+                } catch(Exception e) {
+                    render '{"error":"${e.getMessage()}"}';
+                    return;
+                }
+                render '{"success":true}';
+                return;
+            }
+            render '{"error":"nombre de usuario o correo invalido, el usuario esta registrado?"}';
             return;
 	}
         render '{"error":"nombre de usuario nulo"}'
@@ -77,6 +119,37 @@ public class UsuarioController {
             return;
 	}
 	render '{"success":true,"message":"El usuario se ha modificado satisfactoriamente"}';
+    }
+
+    public Object recuperar() {
+        if(!params || !params.id || !params.codigo) {
+            return;
+        }
+        Usuario usuario = Usuario.get(params.id);
+        if(!usuario || usuario.getCodigo() != params.codigo) {
+            response.setContentType("application/json");
+        
+            render '{"error":true,"message":"codigo invalido"}';
+            return;
+        }
+        if(!params.contrasena) {
+            return [editar:usuario];
+        }
+        usuario.setContrasena(params.contrasena);
+        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        Date fecha = new Date();
+        String codigo = (format.format(fecha) + usuario.nombre).encodeAsSHA1Hex();
+        usuario.setCodigo(codigo);
+        response.setContentType("application/json");
+        if(!usuario.save(flush:true)) {
+            StringBuilder sb = new StringBuilder();
+            usuario.errors.each {
+		sb.append(it.toString() + "<br/>");
+            }
+            render '{"error":true,"message":"' + sb.toString() + '"}';
+            return;
+	}
+	render '{"success":true,"message":"El usuario se ha modificado su contraseña exitosamente"}';
     }
 }
 			

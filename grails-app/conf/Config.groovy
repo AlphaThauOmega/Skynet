@@ -88,6 +88,18 @@ grails.hibernate.osiv.readonly = false
 environments {
     development {
         grails.logging.jul.usebridge = true
+        grails {
+            mail {
+                    host = "smtp.gmail.com"
+                    port = 465
+                    username = ""//clave de alguna cuenta de gmail
+                    password = ""//su contraseña
+                    props = ["mail.smtp.auth":"true", 					   
+                             "mail.smtp.socketFactory.port":"465",
+                             "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+                             "mail.smtp.socketFactory.fallback":"false"]
+            }
+        }
     }
     production {
         grails.logging.jul.usebridge = false
@@ -98,7 +110,7 @@ environments {
 // log4j configuration
 log4j.main = {
     trace 'org.hibernate.type'
-    debug 'org.hibernate.SQL'
+    //debug 'org.hibernate.SQL'
     // Example of changing the log pattern for the default console appender:
     //
     //appenders {

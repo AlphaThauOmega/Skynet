@@ -3,10 +3,11 @@ package skynet;
 import static org.springframework.http.HttpStatus.*;
 import grails.transaction.Transactional;
 import java.text.SimpleDateFormat;
+import grails.converters.JSON;
 
 class ComercioController {
 
-    @Transactional
+
     public Object index(int max) {
         params.max = max ?: 5;
         params.offset =  params.offset ?: 0;
@@ -49,18 +50,20 @@ class ComercioController {
                 Double latitud = Double.parseDouble(params.latitud);
                 Double longitud = Double.parseDouble(params.longitud);
                 resultado += Comercio.executeQuery("""FROM Comercio as comercio WHERE
-                                                        SQRT(POWER(comercio.latitud-?,2)\n\
+                                                        SQRT(POWER(comercio.latitud-?,2)
                                                         + POWER(comercio.longitud-?,2)) < 0.01 """,
                                                         [latitud, longitud]);
             }
             if(params.comida) {
-                resultado += Comercio.executeQuery("""FROM Comercio as comercio WHERE
-                                                        comercio.comidas.nombre LIKE CONCAT('%',?,'%')""",
-                                                        [params.comida]);
+                resultado += Comercio.executeQuery("""FROM Comercio comercio WHERE
+                                                      comercio.id IN (SELECT comercio.id From Comida comida WHERE
+                                                      comida.nombre LIKE CONCAT('%',?,'%'))""",
+                                                      [params.comida]);
             }
             if(params.tipo) {
-                resultado += Comercio.executeQuery("""FROM Comercio as comercio WHERE
-                                                        comercio.comidas.tipo LIKE CONCAT('%',?,'%')""",
+                resultado += Comercio.executeQuery("""FROM Comercio comercio WHERE
+                                                      comercio.id IN (SELECT comercio.id From Comida comida WHERE
+                                                      comida.tipo LIKE CONCAT('%',?,'%'))""",
                                                         [params.tipo]);
             }
             return [comercios:resultado, busqueda:true];
@@ -283,4 +286,81 @@ class ComercioController {
         render '{"success":true,"message":"Comercio creado"}';
         return;
      }
+
+    public Object comerciosMovil() {
+        params.max = params.max ?: 5;
+        params.offset =  params.offset ?: 0;
+        Object listaComercios =  Comercio.executeQuery("FROM Comercio as comercio ORDER BY comercio.calificacion DESC",
+                                                        [max:params.max, offset:params.offset]);
+        response.setContentType("application/json");
+        render '{"comercios":' + (listaComercios as JSON) + ', "total":' + Comercio.count() + '}';
+    }
+
+    public Object buscarMovil() {
+        Object listaComercios = Comercio.findByNombreLike("%${params.buscar}%");
+        response.setContentType("application/json");
+        render '{"comercios":' + (listaComercios as JSON)'}';
+    }
+
+    public Object busquedaAvanzadaMovil() {
+        if(params && params.busqueda) {
+            Object resultado = [];
+            if(params.nombre) {
+                resultado += Comercio.executeQuery("""FROM Comercio as comercio WHERE
+                                                        comercio.nombre LIKE CONCAT('%',?,'%')""",
+                                                        [params.nombre]);
+            }
+            if(params.recomendada) {
+                resultado += Comercio.executeQuery("""FROM Comercio as comercio WHERE
+                                                        comercio.recomendada.nombre LIKE CONCAT('%',?,'%')""",
+                                                        [params.recomendada]);
+            }
+            if(params.menorprecio && params.mayorprecio) {
+                resultado += Comercio.executeQuery("""FROM Comercio as comercio WHERE
+                                                        comercio.menorPrecio < ? AND
+                                                        comercio.mayorPrecio > ?""",
+                                                        [params.menorprecio, params.mayorprecio]);
+            }
+            if(params.estacion) {
+                resultado += Comercio.executeQuery("""FROM Comercio as comercio WHERE
+                                                        comercio.estaciones.nombre LIKE CONCAT('%',?,'%')""",
+                                                        [params.estacion]);
+            }
+            if(params.latitud && params.longitud) {
+                Double latitud = Double.parseDouble(params.latitud);
+                Double longitud = Double.parseDouble(params.longitud);
+                resultado += Comercio.executeQuery("""FROM Comercio as comercio WHERE
+                                                        SQRT(POWER(comercio.latitud-?,2)
+                                                        + POWER(comercio.longitud-?,2)) < 0.01 """,
+                                                        [latitud, longitud]);
+            }
+            if(params.comida) {
+                resultado += Comercio.executeQuery("""FROM Comercio comercio WHERE
+                                                      comercio.id IN (SELECT comercio.id From Comida comida WHERE
+                                                      comida.nombre LIKE CONCAT('%',?,'%'))""",
+                                                      [params.comida]);
+            }
+            if(params.tipo) {
+                resultado += Comercio.executeQuery("""FROM Comercio comercio WHERE
+                                                      comercio.id IN (SELECT comercio.id From Comida comida WHERE
+                                                      comida.tipo LIKE CONCAT('%',?,'%'))""",
+                                                        [params.tipo]);
+            }
+            response.setContentType("application/json");
+            render '{"comercios":' + (resultado as JSON) + ', "total":"busqueda":true}';
+        }
+    }
+
+    public Object mostrarMovil() {
+        if(params && params.id) {
+            params.max = params.max ?: 10;//por omision se muestran los primeros 10 comentarios
+            params.offset = params.offset ?: 0;//por omision siempre se toma desde los primeros
+            Object listaComentarios = Comentario.executeQuery("""FROM Comentario AS comentario WHERE
+                                                                 comentario.comercio.id = ? ORDER BY comentario.fecha desc""",
+                                                                [Long.parseLong(params.id)] ,
+                                                                [max:params.max, offset:params.offset]);
+            response.setContentType("application/json");
+            render '{"comercios":' + (Comercio.get(params.id) as JSON) + ', "comentarios":' + (listaComentarios as JSON) +  '}';
+        }
+    }
 }

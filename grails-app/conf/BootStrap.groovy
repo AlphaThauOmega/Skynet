@@ -1,15 +1,28 @@
 import skynet.Usuario;
 import skynet.Administrador;
+import java.text.SimpleDateFormat;
 
 class BootStrap {
 
     def init = { servletContext ->
-            Administrador admin = new Administrador(nombreUsuario:'mijail',
-                                                    nombre: 'mijail',
-                                                    correo: 'mijail@mijail.com',
-                                                    contrasena:'318672fb86ed60eb2a230a782d53f93c243d199f6f6972fee17a0ce8591ec803f0abf83335b2777b1c44792f98cf66567109c843a1c0deaa2a26b85825ca5ee7');
-            admin.save(flus:true);
+            Administrador admin;
+            admin = Administrador.findByNombreUsuario('admin');
+            if(!admin) {
+                SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+                Date fecha = new Date();
+                String codigo = (format.format(fecha) + 'admin').encodeAsSHA1Hex();
+                admin = new Administrador(nombreUsuario:'admin',
+                                                    nombre: 'administrador',
+                                                    correo: 'admin@empresa.com',
+                                                    apellidoP: 'admin',
+                                                    apellidoM: 'admin',
+                                                    codigo: codigo,
+                                                    validado: true,
+                                                    contrasena:'7407946a7a90b037ba5e825040f184a142161e4c61d81feb83ec8c7f011a99b0d77f39c9170c3231e1003c5cf859c69bd93043b095feff5cce6f6d45ec513764');//admin
+                admin.save(failOnError:true);
+            }
     }
+
     def destroy = {
     }
 }

@@ -68,10 +68,11 @@ function getMap(latitude, longitude, search) {
         marker = new google.maps.Marker({position: event.latLng, map: map});
         comercioLatitud = event.latLng.lat();
         comercioLongitud = event.latLng.lng();
-        if(search) {
+        if($("#search-latitude") && $("#search-longitude")) {
             $("#search-latitude").val(event.latLng.lat());
             $("#search-longitude").val(event.latLng.lng());
         }
+        
     });
 }
 

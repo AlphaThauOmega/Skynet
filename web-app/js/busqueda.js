@@ -60,7 +60,7 @@ function validate_email(inputMail) {
        (inputMail.value.lastIndexOf('.') +1 <= inputMail.value.length)) {
        return true;
     }
-    showMessageS(inputMail, 'Email incorrecto', (5 * 1000), 15, 0, 'input-error', 'messageInputE');
+    showMessageS(inputMail, 'Email incorrecto', (5 * 1000), 15, 0, 'input-error', 'message-input-e');
     return false;
 }//validate_email
 
@@ -73,7 +73,7 @@ function validate_phone(inputPhone) {
 	if(/^[1-9|\-]{8,15}$/.test(inputPhone.value)) {
        return true;
     }
-    showMessageS(inputPhone, 'Número teléfonico incorrecto', (5 * 1000), 15, 0, 'input-error', 'messageInputE');
+    showMessageS(inputPhone, 'Número teléfonico incorrecto', (5 * 1000), 15, 0, 'input-error', 'message-input-e');
     return false;
 }//validate_tel
 
@@ -88,7 +88,7 @@ function validate_pass(inputPass1, inputPass2) {
 	if(inputPass1.value == inputPass2.value) {
 		return true;
 	}
-	showMessageS(inputPass2, 'La contraseña no coincide', (5 * 1000), 15, 0, 'input-error', 'messageInputE');
+	showMessageS(inputPass2, 'La contraseña no coincide', (5 * 1000), 15, 0, 'input-error', 'message-input-e');
 	return false;
 }//validate_pass
 
@@ -114,11 +114,11 @@ function validate_existEmail(inputEmail) {
         	object = obj;
     });
     envio.fail (function (objeto, estado, mensaje) {
-           showMessageS(inputEmail, 'Error al verificar el correo', (5 * 1000), 15, 0, 'input-error', 'messageInputE');
+           showMessageS(inputEmail, 'Error al verificar el correo', (5 * 1000), 15, 0, 'input-error', 'message-input-e');
     });
     if(object && object.exist != null) {
     	if(object.exist) {
-    		showMessageS(inputEmail, 'El correo ya existe', (5 * 1000), 15, 0, 'input-error', 'messageInputE');
+    		showMessageS(inputEmail, 'El correo ya existe', (5 * 1000), 15, 0, 'input-error', 'message-input-e');
     		return true;
     	} else {
     		return false;
@@ -257,7 +257,7 @@ function showcreateAlumn() {
  	   						dataType: 'json'});
  	    envio.done (function (object) {
         	 if(object.error) {
-        	 	showMessageS(null, 'Error:  <br />' + object.message, (5 * 1000), 0, 0, 'form-error', 'showError');
+        	 	showMessageS(null, 'Error:  <br />' + object.message, (5 * 1000), 0, 0, 'form-error', 'show-error');
         	 	return;
         	 }
         	 if(object.success) {

@@ -12,12 +12,17 @@
 $(document).ready(function() {
     $("#editar-usuario").submit(function(event) {
         event.preventDefault();//se detiene el envió de la forma
-	editar(this);
+	edit(this);
+    });
+
+    $("#recuperar-contrasena").submit(function(event) {
+        event.preventDefault();//se detiene el envió de la forma
+	recovery(this);
     });
 
     $("#eliminar-usuario").submit(function(event) {
         event.preventDefault();//se detiene el envió de la forma
-	eliminar(this);
+	deleteUser(this);
     });
 })
 
@@ -33,7 +38,7 @@ function validate_email(inputMail) {
        (inputMail.value.lastIndexOf('.') +1 <= inputMail.value.length)) {
        return true;
     }
-    showMessageS(inputMail, 'Email incorrecto', (5 * 1000), 15, 0, 'input-error', 'messageInputE');
+    showMessageS(inputMail, 'Email incorrecto', (5 * 1000), 15, 0, 'input-error', 'message-input-e');
     return false;
 }//validate_email
 
@@ -48,7 +53,7 @@ function validate_pass(inputPass1, inputPass2) {
 	if(inputPass1.value === inputPass2.value) {
 		return true;
 	}
-	showMessageS(inputPass2, 'La contraseña no coincide', (5 * 1000), 15, 0, 'input-error', 'messageInputE');
+	showMessageS(inputPass2, 'La contraseña no coincide', (5 * 1000), 15, 0, 'input-error', 'message-input-e');
 	return false;
 }//validate_pass
 
@@ -57,7 +62,7 @@ function validate_pass(inputPass1, inputPass2) {
  * para crear un nuevo postulante a profesor
  * @para {DOMElement} form
  */
- function editar(form) {
+ function edit(form) {
     if(!confirm ("Quieres modifica el registro?")) {
         return false;
     }
@@ -119,12 +124,60 @@ function validate_pass(inputPass1, inputPass2) {
     });
 }
 
+
+/*
+ * Envía los datos necesarios de la forma form 
+ * para crear un nuevo postulante a profesor
+ * @para {DOMElement} form
+ */
+ function recovery(form) {
+    var formData = new FormData();
+    if(validate_pass(form.contrasena, form.recontrasena)) {
+            var contrasena = CryptoJS.SHA3(form.recontrasena.value, { outputLength: 512 });
+            formData.append('contrasena', contrasena);
+    } else {
+        return false;
+    }
+    var envio = $.ajax({
+        type: 'POST',
+ 	url: $(form).attr('action'),
+ 	xhr: function() {
+            var ownXhr = $.ajaxSettings.xhr();
+            if(ownXhr.upload){
+            	ownXhr.upload.addEventListener('progress', function(e) {
+                	progressSend(e,null);
+                }, false);// false for asinchronous
+            }
+            return ownXhr;
+        },
+        timeout: 5000,
+ 	data: formData,
+ 	cache: false,
+ 	contentType: false,
+    	processData: false,
+ 	dataType: 'json'});
+    envio.done (function (object) {
+        if(object.error) {
+            showMessageS(null, 'Error:  <br/>' + object.message, (5 * 1000), 0, 0, 'form-error', 'show-error');
+            return;
+         }
+        if(object.success) {
+            showMessageS(null, 'El registro se ha modificado la contraseña exitosamente', (5 * 1000), 0, 0, 'container', 'show-success');
+            goTo(home);
+        }
+    });
+    envio.fail (function (object, estate, message) {
+       showMessageS(null, 'Error:  <br/>' + object.message, (5 * 1000), 0, 0, 'form-error', 'show-error');
+        alert('Reporte de error:\n' + estate + '\n' + message);
+    });
+}
+
 /*
  * Envía los datos para eliminar un registro de usuario
  * @para {DOMElement} form
  * @return {undefined}
  */
-function eliminar(form) {
+function deleteUser(form) {
     if(! confirm("Desea eliminar el registro")) {
         return false;
     }

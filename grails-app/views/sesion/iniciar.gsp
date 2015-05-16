@@ -14,10 +14,25 @@
                     <table>
                         <tr><td class="table-inf">Nombre usuario: </td><td class="table_input"><input type="text" name="nombreUsuario" placeholder="Nombre de usuario" value="" id="login-username-input" required="" /></td></tr>
                         <tr><td class="table-inf">Contraseña: </td><td class="table_input"><input type="password" name="contrasena" maxlength="100" value="" placeholder="Contrase&ntilde;a usuario" id="login-password-input" required="" /></td></tr>
-                        <tr><td colspan="2"><input type="submit" name="access_login" value="Acceder" id="access-login" /></td></tr>
+                        <tr><td></td><td id="forget-password">Recuperar contraseña</td></tr>
+                        <tr><td colspan="2"><input type="submit" name="access-login" value="Acceder" id="access-login" /></td></tr>
                     </table>
                     </g:form>
                 </div>
             </div>
+            <div id="overlay"></div>
+            <div id="overlay-forget-password">
+            <div class="close-overlay" href="#">[x] Close</div>
+                <g:form name="send-email" url="[controller:'usuario', action:'enviar']">
+                    <p> Para reiniciar tu password debes introducir nombre de usuario y correo </p>
+                    <table>
+                        <tr><td class="table-inf">Nombre usuario: </td><td class="table_input"><input type="text" name="nombreUsuario" placeholder="Nombre de usuario" value="" required="" /></td></tr>
+                        <tr><td class="table-inf">Correo: </td><td class="table_input"><input type="text" name="correo" value="" placeholder="Correo" required="" /></td></tr>
+                        <tr><td colspan="2"><input type="submit" value="Recuparar" id="send-password" /></td></tr>
+                    </table>
+                </g:form>
+                <br/>
+            </div>
+            
 	</body>
 </html>

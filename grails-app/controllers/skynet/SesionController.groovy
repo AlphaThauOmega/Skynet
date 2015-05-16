@@ -2,6 +2,7 @@ package skynet;
 
 import static org.springframework.http.HttpStatus.*;
 import grails.transaction.Transactional;
+import grails.converters.JSON;
 
 class SesionController {
 

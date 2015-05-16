@@ -37,6 +37,16 @@ public class Usuario {
       */
     private String correo;
 
+   /**
+     * Codigo de seguridad del usuario.
+     */
+    private String codigo;
+
+    /**
+     * Informa si el usuario esta validado.
+     */
+    private boolean validado;
+
     /*
      * Metodo getter de nombre
      */
@@ -77,6 +87,20 @@ public class Usuario {
      */
     public String getCorreo() {
         return this.correo;
+    }
+
+    /*
+     * Metodo getter de codigo
+     */
+    public String getCodigo() {
+        return this.codigo;
+    }
+
+    /*
+     * Metodo getter de validado
+     */
+    public boolean getValidado() {
+        return this.validado;
     }
 
     /*
@@ -127,6 +151,20 @@ public class Usuario {
         this.correo = correo;
     }
 
+    /*
+     * Metodo setter de codigo
+     */
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    /*
+     * Metodo setter de validado
+     */
+    public void setValidado(boolean validado) {
+        this.validado = validado;
+    }
+
     /**
      * Relación 1 usuario a muchos comentarios, muchas calificaciones
      */
@@ -142,6 +180,7 @@ public class Usuario {
         nombreUsuario size: 1..100, blank: false, unique: true;
         contrasena size: 1..300, blank: false;
         correo size: 3..100, blank: false;
+        codigo size: 1..150;
     }
 
 

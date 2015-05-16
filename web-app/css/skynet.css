@@ -247,8 +247,8 @@ input[type=button]::-moz-focus-inner, input[type=submit]::-moz-focus-inner, butt
     background-repeat: no-repeat;	
 }
 
-#access-login {
-    margin:6% 0 5% 80%;
+#access-login, #send-password {
+    margin:6% 0 5% 75%;
 }
 
 #register-table, #edit-table, #search-table {
@@ -328,6 +328,86 @@ input[type=button]::-moz-focus-inner, input[type=submit]::-moz-focus-inner, butt
 #new-comment textarea {
     width:100%
 }
+
+
+
+#forget-password {
+    font-size: 10.5pt;
+    cursor:pointer;
+    color: blue;
+    padding-left:20%;
+}
+
+#forget-password:hover {
+    text-decoration: underline;
+    color: black;
+}
+
+#forget-password:active {
+    text-decoration: none;
+}
+
+#overlay {
+    position:fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index:9999;
+    opacity:0.7;
+  	-o-filter: blur(7px);
+  	-ms-filter: blur(7px);
+    display:none;
+}
+
+#overlay-forget-password {
+    position:fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none;
+    z-index:99999;
+    margin: auto;
+    display:none;
+    overflow:auto;
+    padding-top:30px;
+}
+
+#overlay-forget-password p {
+    height: 45px;
+    margin-top: 30px;
+    padding: 3% 3% 0.5% 3%;
+    background: #424548;
+    border-radius: 5px;
+    color: white;
+    box-shadow:
+            0 2px 2px rgba(0,0,0,0.2),
+            0 1px 5px rgba(0,0,0,0.2); 
+    opacity: 0.85;
+    font-size: 13pt;
+    text-align: center;
+}
+
+#overlay-forget-password form {
+    width: 50%;
+    border-radius: 5px;
+    color: #e04d0b;
+    background-color: white;
+    box-shadow:
+            0 2px 2px rgba(0,0,0,0.2),
+            0 1px 5px rgba(0,0,0,0.2); 
+    font-size: 13pt;
+    text-align: center;
+    width: 50%;
+    margin: 10% auto 5% auto
+}
+
+#overlay-forget-password table {
+    margin: 0 auto;
+}
+
 
 .facebook { 
     width:100px;
@@ -574,4 +654,30 @@ input[type=button]::-moz-focus-inner, input[type=submit]::-moz-focus-inner, butt
     display: block;
     background: url("../images/rating.png") no-repeat center -33px;
     cursor: pointer;
+}
+
+.close-overlay {
+    background: url("../images/overlay-close.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    display: block;
+    height: 49px;
+    width: 50px;
+    text-indent:-999999px;
+    float: left;
+    position:relative;
+    top: 17%;
+    left: 73%;
+    z-index:99999;
+    cursor:pointer;
+}
+
+.close-overlay:hover {
+    background-position: 0 -50px;
+    -webkit-transition-duration: 0.5s;
+    -moz-transition-duration: 0.5s;
+}
+
+.close-overlay:active {
+    top:17.2%;
+    -webkit-transition-duration: 0.2s;
+    -moz-transition-duration: 0.2s;
 }
