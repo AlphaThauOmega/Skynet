@@ -409,20 +409,44 @@ input[type=button]::-moz-focus-inner, input[type=submit]::-moz-focus-inner, butt
 }
 
 
-.facebook { 
+#facebook { 
     width:100px;
     height:50px;
     padding-left:55px;
     background: url("../images/facelogo.png") no-repeat 0 0;
 }
 
-.twitter {
+#twitter {
     width:100px;
     height:50px;
     padding-left:55px;
     background: url("../images/twitterlogo.png") no-repeat 0 0;
 }
 
+
+#twitter:hover {
+    background-position: 0 -50px;
+    -webkit-transition-duration: 0.5s;
+    -moz-transition-duration: 0.5s;
+}
+
+#twitter:active {
+    top:17.2%;
+    -webkit-transition-duration: 0.2s;
+    -moz-transition-duration: 0.2s;
+}
+
+#facebook:hover {
+    background-position: 0 -50px;
+    -webkit-transition-duration: 0.5s;
+    -moz-transition-duration: 0.5s;
+}
+
+#facebook:active {
+    top:17.2%;
+    -webkit-transition-duration: 0.2s;
+    -moz-transition-duration: 0.2s;
+}
 
 .hidden {
     display:none;

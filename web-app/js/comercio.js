@@ -37,6 +37,12 @@ $(document).ready(function() {
         event.preventDefault();//se detiene el envió de la forma
         eliminar(this);
     });
+    $("#facebook").click(function() {
+        shareOnFacebook();
+    })
+    $("#twitter").click(function(){
+        shareOnTwitter();
+    })
 })
 
 /**
