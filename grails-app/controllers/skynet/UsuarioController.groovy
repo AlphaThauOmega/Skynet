@@ -20,7 +20,7 @@ public class UsuarioController {
 	}
         SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
         Date fecha = new Date();
-        String codigo = (format.format(fecha) + usuario.nombre).encodeAsSHA1Hex();
+        String codigo = (format.format(fecha) + params.nombreUsuario).encodeAsSHA1Hex();
         params.codigo = codigo;
         params.validado = false;
         Usuario usuario = new Usuario(params);
@@ -55,7 +55,7 @@ public class UsuarioController {
             String codigo = (format.format(fecha) + usuario.nombre).encodeAsSHA1Hex();
             usuario.setCodigo(codigo);
             usuario.save(flush:true);
-            String url = "Skynet" + "/usuario/recuperar/${usuario.id}?codigo=${codigo}";
+            String url = createLink(action: "recuperar", controller:"usuario", params:[id:usuario.id,codigo:codigo], absolute: true);
             if(usuario) {
                 try {
                     sendMail {
@@ -63,7 +63,7 @@ public class UsuarioController {
                             to usuario.correo;
                             subject 'Reinicio contraseña'
                             html """<p>Da click en el sigiente link para restablecer tu contrasena</p>\n\
-                                <a href="${url}">Recuperar contraseña</a>
+                                <a href="${url}">Recuperar contraseña</a>\n\
                                 <p style=\"font-size:6pt;\"> Si usted esta leyendo las letra pequeñas tiene buena vista</p>
 				<p style=\"font-size:6pt;\"> Skynet es una marca registrada, lease los terminos y condicines de uso</p>"""
                     }
