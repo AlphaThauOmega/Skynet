@@ -2,7 +2,9 @@
     <g:set var="url" value="${createLink(action:'nuevoComercio', controller:'administrador', params: [create:'true'], absolute:"true")}" />
     <g:set var="name" value="create-new-store"/>
     <g:set var="action" value="Registrar"/>
+    <g:set var="required" value="required" />
     <g:if test="${editar}">
+        <g:set var="required" value="" />
         <img class="image" src="${createLink(action:'imagen', controller:'comercio', params: [id:editar?.id], absolute:"true")}" />
         <g:set var="url" value="${createLink(action:'editar', controller:'comercio', params: [id:editar?.id], absolute:"true")}" />
         <g:set var="name" value="edit-store"/>
@@ -12,18 +14,20 @@
     <br/>
     <g:form name="${name}" url="${url}">
         <table>
-            <tr><td class="table-inf">Nombre: </td><td colspan="3" class="table-input"><input type="text" name="nombre" maxlength="100" placeholder="${editar?.nombre}"/></td></tr>
+            <tr><td class="table-inf">Nombre: </td><td colspan="3" class="table-input"><input type="text" name="nombre" maxlength="100" placeholder="${editar?.nombre}" ${required}/></td></tr>
             <tr><td colspan="4" class="table-inf">Especialidad(comida): </td></tr>
-            <tr><td class="table-inf"><td class="table-input"><input type="text" name="recomendada" maxlength="30" placeholder="${(editar?.recomendada?.nombre) ?: 'nombre'}" style="margin-left:-70%"/></td><td class="table-input"><input type="text" name="recomendadaTipo" maxlength="30"  placeholder="${(editar?.recomendada?.tipo) ?: 'tipo'}" style="margin-left:-100%"/></td><td class="table-input"><input type="number" name="recomendadaPrecio"  placeholder="${(editar?.recomendada?.precio) ?: 'precio'}" style="margin-left:-360%;width:50px"/></td></tr>
+            <tr><td class="table-inf"><td class="table-input"><input type="text" name="recomendada" maxlength="30" placeholder="${(editar?.recomendada?.nombre) ?: 'nombre'}" style="margin-left:-70%" ${required}/></td><td class="table-input"><input type="text" name="recomendadaTipo" maxlength="30"  placeholder="${(editar?.recomendada?.tipo) ?: 'tipo'}" style="margin-left:-100%" ${required}/></td><td class="table-input"><input type="number" name="recomendadaPrecio"  placeholder="${(editar?.recomendada?.precio) ?: 'precio'}" style="margin-left:-360%;width:50px" ${required}/></td></tr>
             <tr><td colspan="4" class="table-inf">Rango precios: </td></tr>
-            <tr><td class="table-inf"></td><td class="table-input"><input type="number" step="any" name="menorPrecio" placeholder="${(editar?.menorPrecio) ?: 'menor precio'}" id="menorPrecio" /></td><td class="table-input"><input type="number" step="any" name="mayorPrecio" placeholder="${(editar?.mayorPrecio) ?: 'mayor precio'}" id="mayorPrecio"  style="margin-left:-20%"/></td></tr>
+            <tr><td class="table-inf"></td><td class="table-input"><input type="number" step="any" name="menorPrecio" placeholder="${(editar?.menorPrecio) ?: 'menor precio'}" id="menorPrecio" ${required}/></td><td class="table-input"><input type="number" step="any" name="mayorPrecio" placeholder="${(editar?.mayorPrecio) ?: 'mayor precio'}" id="mayorPrecio"  style="margin-left:-20%" ${required}/></td></tr>
             <tr><td class="table-inf" >Comedor: </td><td colspan="4" class="table-input" style="color:grey"><g:if test="${editar?.comedor == true}"><input type="checkbox" name="comedor" checked></g:if><g:else><input type="checkbox" name="comedor"></g:else></td></tr>
             <tr><td class="table-inf" >Ba&#241o: </td><td colspan="4" class="table-input" style="color:grey"><g:if test="${editar?.bano == true}"><input type="checkbox" name="bano" checked></g:if><g:else><input type="checkbox" name="bano"></g:else></td></tr>
-            <tr><td class="table-inf" >Direccion: </td><td colspan="4" class="table-input" style="color:grey"><input type="text" name="direccion" maxlength="100" placeholder="${(editar?.direccion) ?: 'direccion'}"/></td></tr>
-            <tr><td class="table-inf" >Pagina web: </td><td colspan="4" class="table-input"><input type="text" name="pagina" maxlength="100" placeholder="${(editar?.pagina) ?: 'pagina web'}"/></td></tr>
-            <tr><td class="table-inf" >Imagen: </td><td colspan="4" class="table-input"><input type="file" name="imagen" value="nueva"/></td></tr>
+            <tr><td class="table-inf" >Direccion: </td><td colspan="4" class="table-input" style="color:grey"><input type="text" name="direccion" maxlength="100" placeholder="${(editar?.direccion) ?: 'direccion'}" ${required}/></td></tr>
+            <tr><td class="table-inf" >Pagina web: </td><td colspan="4" class="table-input"><input type="text" name="pagina" maxlength="100" placeholder="${(editar?.pagina) ?: 'pagina web'}" ${required}/></td></tr>
+            <tr><td class="table-inf" >Imagen: </td><td colspan="4" class="table-input"><input type="file" name="imagen" value="nueva" ${required}/></td></tr>
             <tr><td class="table-inf" colspan="5">Ubicacion: </td></tr>
             <tr><td colspan="5"><div id="map" style="width:500px;height:400px"></div></td></tr>
+            <input id="search-longitude" type="number" name="longitud" class="hidden"  step="any" />
+            <input id="search-latitude" type="number" name="latitud" class="hidden"   step="any"/>
         </table>
     </g:form>
     <script type="text/javascript">

@@ -248,7 +248,7 @@ class ComercioController {
             comercio.setLongitud(Double.parseDouble(params.longitud));
         }
         if(params.latitud) {
-            comercion.setLongitud(Double.parseDouble(params.latitud));
+            comercio.setLatitud(Double.parseDouble(params.latitud));
         }
         if(params.mayorPrecio) {
             comercio.setMayorPrecio(Double.parseDouble(params.mayorPrecio));

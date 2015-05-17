@@ -249,10 +249,10 @@ function editStore(form) {
     if(form.mayorPrecio.value != "") {
         formData.append('mayorPrecio', form.mayorPrecio.value);
     }
-    if(comercioLatitud != 0) {
+    if(form.latitud.value != "") {
         formData.append('latitud', comercioLatitud);
     }
-    if(comercioLongitud != 0) {
+    if(form.longitud.value != "" != 0) {
         formData.append('longitud', comercioLongitud);
     }
     if(form.direccion.value != "") {
