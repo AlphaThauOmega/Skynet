@@ -23,7 +23,7 @@ $(document).ready(function() {
  * @returns {Boolean}
  */
 function validate_email(inputMail) {
-	if((inputMail.value.indexOf('@') > 1) &&
+	if((inputMail.value.indexOf('@') >= 1) &&
        (inputMail.value.lastIndexOf('.') >= inputMail.value.indexOf('@') +1) &&
        (inputMail.value.lastIndexOf('.') +1 <= inputMail.value.length)) {
        return true;
@@ -39,37 +39,23 @@ function validate_email(inputMail) {
  * @returns {Boolean}
  */
 function validate_existUser(inputUser) {
-    var object = null;
-    var formData = new FormData();
-    formData.append('nombreUsuario', inputUser.value);
+    var exist = false;
     var envio = $.ajax({
         type: 'POST',
         url: "/Skynet/usuario/existeUsuario",
-        xhr: function() {
-        var ownXhr = $.ajaxSettings.xhr();
-            if(ownXhr.upload){
-                ownXhr.upload.addEventListener('progress', function(e) {
-                progressSend(e,null);
-                }, false);// false for asinchronous
-            }
-            return ownXhr;},
-        timeout: 5000,
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
- 	dataType: 'json'});
+        data: {nombreUsuario:inputUser.value},
+        async: false,
+        dataType: 'json'});
     envio.done (function (object) {
-        if(object && object.exist) {
+        if(object && object.exist === true) {
             showMessageS(inputUser, 'El nombre de usuario ya existe', (5 * 1000), 15, 0, 'input-error', 'message-input-e');
-            return true;
+            exist = true;
         }
-        return false;
     });
     envio.fail (function (objeto, estado, mensaje) {
         showMessageS(inputUser, 'Error al verificar el usuario', (5 * 1000), 15, 0, 'input-error', 'message-input-e');
-        return false;
     });
+    return exist;
 }//validate_user_name
 
 /**
@@ -95,7 +81,7 @@ function validate_pass(inputPass1, inputPass2) {
  */
  function createUser(form) {
     if( validate_email(form.correo) &&
-        (! validate_existUser(form.nombreUsuario)) && 
+        (!validate_existUser(form.nombreUsuario)) && 
         validate_pass(form.contrasena, form.recontrasena)) {
         var contrasena = CryptoJS.SHA3(form.recontrasena.value, { outputLength: 512 });
         var formData = new FormData();

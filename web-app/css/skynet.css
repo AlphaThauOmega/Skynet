@@ -361,7 +361,7 @@ input[type=button]::-moz-focus-inner, input[type=submit]::-moz-focus-inner, butt
     display:none;
 }
 
-#overlay-forget-password {
+#overlay-forget-password, #overlay-image {
     position:fixed;
     top: 0;
     left: 0;
@@ -373,6 +373,16 @@ input[type=button]::-moz-focus-inner, input[type=submit]::-moz-focus-inner, butt
     display:none;
     overflow:auto;
     padding-top:30px;
+}
+
+#store-image {
+    cursor:pointer;
+}
+
+#overlay-image img {
+    margin-top: 30px;
+    padding: 3% 3% 0.5% 3%;
+    text-align: center;
 }
 
 #overlay-forget-password p {
@@ -520,8 +530,8 @@ input[type=button]::-moz-focus-inner, input[type=submit]::-moz-focus-inner, butt
 }
 
 .image {
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     z-index: 99;
     position: relative;
     float: right;
@@ -641,6 +651,7 @@ input[type=button]::-moz-focus-inner, input[type=submit]::-moz-focus-inner, butt
 .comment-user-text {
     padding-left:5%;
     padding-bottom:5%;
+    width: 79%;
 }
 
 .delete-row {

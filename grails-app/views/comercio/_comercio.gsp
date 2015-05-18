@@ -3,7 +3,7 @@
 </div>
 <div id="board">
     <div id="${comercio?.id}" class="in-store" style="cursor:default">
-        <img class="image" src="${createLink(action:'imagen', controller:'comercio', params: [id:comercio?.id], absolute:"true")}" />
+        <img id="store-image" class="image" src="${createLink(action:'imagen', controller:'comercio', params: [id:comercio?.id], absolute:"true")}" />
         <br/>
         <table>
             <tr><td class="table-inf">Especialidad: </td><td class="table-input">${comercio?.recomendada?.nombre}</td></tr>
@@ -81,4 +81,9 @@
             </div>
         </div>
     </div>
+</div>
+<div id="overlay"></div>
+<div id="overlay-image">
+<div class="close-overlay">[x] Close</div>
+<img src="${createLink(action:'imagen', controller:'comercio', params: [id:comercio?.id], absolute:"true")}" />
 </div>

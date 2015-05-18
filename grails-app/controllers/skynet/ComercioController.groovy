@@ -72,7 +72,7 @@ class ComercioController {
 
     public Object mostrar() {
         if(params && params.id) {
-            params.max = params.max ?: 10;//por omision se muestran los primeros 10 comentarios
+            params.max = params.max ?: 100;//por omision se muestran los primeros 10 comentarios
             params.offset = params.offset ?: 0;//por omision siempre se toma desde los primeros
             Object listaComentarios = Comentario.executeQuery("""FROM Comentario AS comentario WHERE
                                                                  comentario.comercio.id = ? ORDER BY comentario.fecha desc""",
@@ -293,18 +293,30 @@ class ComercioController {
         Object listaComercios =  Comercio.executeQuery("FROM Comercio as comercio ORDER BY comercio.calificacion DESC",
                                                         [max:params.max, offset:params.offset]);
         response.setContentType("application/json");
-        render '{"comercios":' + (listaComercios as JSON) + ', "total":' + Comercio.count() + '}';
+        if(listaComercios != null) {
+            render '{"comercios":' + (listaComercios as JSON) + ', "total":' + Comercio.count() + '}';
+            return;
+        }
+        render '{"comercios":{}, "total":0}';
     }
 
     public Object buscarMovil() {
-        Object listaComercios = Comercio.findByNombreLike("%${params.buscar}%");
         response.setContentType("application/json");
-        render '{"comercios":' + (listaComercios as JSON)'}';
+        Object listaComercios = [];
+        if(params && params.buscar) {
+            listaComercios += Comercio.findByNombreLike("%${params.buscar}%");
+        }
+        if(listaComercios != null && listaComercios != []) {
+            render '{"comercios":' + (listaComercios as JSON) + '}';
+            return;
+        }
+        render '{"comercios":{}}';
     }
 
     public Object busquedaAvanzadaMovil() {
-        if(params && params.busqueda) {
-            Object resultado = [];
+	response.setContentType("application/json");
+	Object resultado = [];
+        if(params) {
             if(params.nombre) {
                 resultado += Comercio.executeQuery("""FROM Comercio as comercio WHERE
                                                         comercio.nombre LIKE CONCAT('%',?,'%')""",
@@ -346,12 +358,16 @@ class ComercioController {
                                                       comida.tipo LIKE CONCAT('%',?,'%'))""",
                                                         [params.tipo]);
             }
-            response.setContentType("application/json");
-            render '{"comercios":' + (resultado as JSON) + ', "total":"busqueda":true}';
         }
+        if(resultado != null && resultado != []) {
+            render '{"comercios":' + (resultado as JSON) + ', "busqueda":true}';
+            return;
+        }
+        render '{"comercios":{}, "busqueda":true}';
     }
 
     public Object mostrarMovil() {
+        response.setContentType("application/json");
         if(params && params.id) {
             params.max = params.max ?: 10;//por omision se muestran los primeros 10 comentarios
             params.offset = params.offset ?: 0;//por omision siempre se toma desde los primeros
@@ -359,8 +375,9 @@ class ComercioController {
                                                                  comentario.comercio.id = ? ORDER BY comentario.fecha desc""",
                                                                 [Long.parseLong(params.id)] ,
                                                                 [max:params.max, offset:params.offset]);
-            response.setContentType("application/json");
             render '{"comercios":' + (Comercio.get(params.id) as JSON) + ', "comentarios":' + (listaComentarios as JSON) +  '}';
+            return;
         }
+        render '{"comercios":{}, "comentarios":{}}';
     }
 }

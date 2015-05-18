@@ -32,6 +32,37 @@ public class UsuarioController {
         render '{"success":true,"message":"El usuario se ha registrado correctamente"}';
     }
 
+    public Object registrarMovil() { 
+	response.setContentType("application/json");
+        if (params == null ||
+                                params.nombreUsuario == null ||
+                                params.nombre == null ||
+                                params.apellidoP == null ||
+                                params.apellidoM == null ||
+                                params.correo == null ||
+                                params.contrasena == null) {
+            	render '{"error":true, "message":"Falta informacion para crear un usuario"}';
+		return ;
+	}
+        Usuario usuario; 
+        usuario = Usuario.findByNombreUsuario(params.nombreUsuario)
+        if(usuario) {
+            render '{"error":true,"message":"El nombre de usuario ya existe"}';
+            return;
+        }
+        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        Date fecha = new Date();
+        String codigo = (format.format(fecha) + params.nombreUsuario).encodeAsSHA1Hex();
+        params.codigo = codigo;
+        params.validado = false;
+        usuario = new Usuario(params);
+        if(!usuario.save()) {
+            render '{"error":true, "message":"Error al crear usuario"}';
+            return
+        }
+        render '{"success":true,"message":"El usuario se ha registrado correctamente"}';
+    }
+
     public Object existeUsuario() { 
         response.setContentType("application/json");
         if (params && params.nombreUsuario) {

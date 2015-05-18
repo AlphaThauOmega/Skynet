@@ -27,6 +27,22 @@ $(document).ready(function() {
         event.preventDefault();
         addComment(this);
     }); 
+    $("#store-image").click(function() {
+        $("#overlay").fadeIn("slow");
+	$("#overlay-image").fadeIn("slow");
+    });
+    $(document.body).keydown(function(event) {
+        if(event.which == 27) {
+            $("#overlay").fadeOut("slow");
+            $("#overlay-image").fadeOut("slow");
+	}
+    });
+
+    $(".close-overlay").click(function() {
+        $("#overlay").fadeOut("slow");
+	$("#overlay-image").fadeOut("slow");
+    });
+
     $("#add-new-meal").click(function() {
 	addFood();
     });
